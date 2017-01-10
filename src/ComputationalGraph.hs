@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 --
--- Module      :  ComutationalGraph
+-- Module      :  ComputationalGraph
 -- Copyright   :
 -- License     :  AllRightsReserved
 --
@@ -12,8 +12,9 @@
 --
 -----------------------------------------------------------------------------
 
-module ComutationalGraph (
-    forwardBackward
+module ComputationalGraph
+( forwardBackward
+, generalForwardBackward
 ) where
 
 -- | Forward-backward pass
@@ -31,7 +32,14 @@ module ComutationalGraph (
 -- a monad (v), and gradients are greneralized to a numeric (g). We don't
 -- restict the activations (a) at all.
 forwardBackward :: (Num g, Monad v) => [(a -> a, v g -> a -> v g)] -> a -> v g
-forwardBackward [] _ = return 1 -- Most general implementation
-forwardBackward ((f, df):subgraph) x = df dy x where
-    dy = forwardBackward subgraph y
+forwardBackward = generalForwardBackward (return 1)
+
+-- | The general forward-backward pass
+-- This implementation takes a parameter that corresponds to the "unity" gradient
+-- that a final layer would return. This makes it easier to plug in different
+-- types.
+generalForwardBackward :: g -> [(a -> a, g -> a -> g)] -> a -> g
+generalForwardBackward one [] _ = one
+generalForwardBackward one ((f, df):subgraph) x = df dy x where
+    dy = generalForwardBackward one subgraph y
     y = f x

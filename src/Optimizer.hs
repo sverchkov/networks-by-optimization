@@ -36,6 +36,6 @@ nesterovUpdate rate mu v0 dx = (v, update) where
 
 -- | Adam-inspired Update
 eveUpdate scale b1 b2 m v dx = (m', v', update) where
-    update = V.map (scale *) $ V.zipwith (/) m' (V.map sqrt v')
+    update = V.map (scale *) $ V.zipWith (/) m' (V.map sqrt v')
     m' = V.zipWith (+) (V.map (b1 *) m) (V.map ((1 - b1) *) dx)
     v' = V.zipWith (+) (V.map (b2 *) v) (V.map (\g -> (1 - b2) * g^2) dx)

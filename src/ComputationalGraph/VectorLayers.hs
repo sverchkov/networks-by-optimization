@@ -12,8 +12,13 @@
 --
 -----------------------------------------------------------------------------
 
-module ComputationalGraph.VectorLayers (
-
+module ComputationalGraph.VectorLayers
+( distribute
+, distributeGrad
+, sumLayer
+, sumGrad
+, reluLayer
+, reluGrad
 ) where
 
 import qualified Data.Vector as V
